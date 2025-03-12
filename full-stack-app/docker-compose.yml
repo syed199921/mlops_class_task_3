@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   frontend:
     build:
@@ -7,6 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend/src:/app/src
+      - /app/node_modules
     ports:
       - "3000:3000"
     environment:
@@ -18,23 +18,21 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend/src:/app/src
+      - /app/node_modules
     ports:
       - "5000:5000"
     environment:
       - NODE_ENV=development
-      - DB_HOST=database
-      - DB_USER=root
-      - DB_PASS=password
+      - MONGODB_URI=mongodb+srv://syedzulkifalbanuri21:mlopsatmongodb@cluster0.qumzw.mongodb.net/
 
-  database:
-    build:
-      context: ./database
-      dockerfile: Dockerfile
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
     volumes:
-      - db_data:/var/lib/mysql
+      - mongo-data:/data/db
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=mydatabase
+      - MONGO_INITDB_DATABASE=mlops_activity
 
 volumes:
-  db_data:
+  mongo-data:
